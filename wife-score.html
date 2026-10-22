@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>老婆指數測驗</title>
+<style>
+:root{--bg:#e0c8bb;--card:#ecdcd3;--ink:#1f1a18;--sub:#5c4a44;--rose:#b95c88;--gold:#e5cfae;--line:#c9ad9f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1918;--card:#2b2625;--ink:#f3e9e3;--sub:#b9aaa2;--rose:#d9779f;--gold:#e5cfae;--line:#443c3a}}
+:root[data-theme="dark"]{--bg:#1c1918;--card:#2b2625;--ink:#f3e9e3;--sub:#b9aaa2;--rose:#d9779f;--gold:#e5cfae;--line:#443c3a}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Serif TC","Songti TC",serif;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:20px 18px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--sub)}
+.bar{height:5px;background:var(--line);border-radius:3px;margin:12px 0 28px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--rose);width:0;transition:width .3s}
+h1{font-size:34px;line-height:1.3;margin:40px 0 12px}
+h1 b{color:var(--rose)}
+h2{font-size:22px;line-height:1.4;margin:0 0 6px}
+h2 small{color:var(--rose);font-style:italic;font-weight:400;font-size:15px;margin:0 4px}
+.qn{color:var(--rose);font-size:15px;margin-bottom:4px}
+p{line-height:1.8;color:var(--sub);margin:8px 0}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);color:var(--ink);border:2px solid transparent;border-radius:14px;padding:14px;margin-top:12px;font:inherit;font-size:16px;line-height:1.6;cursor:pointer}
+.opt:focus-visible{outline:3px solid var(--rose);outline-offset:2px}
+.opt.on{border-color:var(--rose)}
+.opt .l{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-style:italic}
+.opt .t{flex:1}.opt .t small{display:block;color:var(--sub);font-size:14px;margin-top:2px}
+.opt .s{flex:none;font-weight:700;font-size:14px;padding:5px 11px;border-radius:99px;border:1.5px solid var(--sub);color:var(--sub)}
+.opt .s.s5{background:var(--rose);border-color:var(--rose);color:#fff}
+.opt .s.s3{background:var(--gold);border-color:var(--gold);color:#3a2d22}
+.nav{display:flex;justify-content:space-between;margin-top:24px;gap:10px}
+.btn{font:inherit;font-size:16px;padding:11px 22px;border-radius:99px;border:2px solid var(--rose);background:var(--rose);color:#fff;cursor:pointer}
+.btn.ghost{background:none;color:var(--rose)}
+.btn:disabled{opacity:.35;cursor:default}
+.big{font-size:84px;line-height:1;color:var(--rose);margin:10px 0 0}
+.big small{font-size:22px;color:var(--sub)}
+.tier{background:var(--card);border-radius:14px;padding:14px 16px;margin-top:12px;border:2px solid transparent}
+.tier.me{border-color:var(--rose)}
+.tier h3{margin:0;font-size:18px}.tier h3 span{color:var(--rose);font-style:italic;font-size:15px;margin-right:6px}
+.tier p{margin:4px 0 0;font-size:15px}
+.note{margin-top:26px;font-size:14px}
+.src{margin-top:28px;font-size:12px;color:var(--sub);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+var Q=[
+["耐心包容型","動不動就嫌棄型",["遇到事情願意體諒你，不會一直挑剔","一點小事就嫌東嫌西，讓你壓力很大","完全不體諒你，只在乎自己的感受"]],
+["情緒穩定型","一點就炸型",["有事情願意好好講，不會動不動就發脾氣","一不順心就發脾氣，還要你負責哄她，還是會自我檢討最後道歉","情緒一來就失控，完全不管你的感受，或是手來腳來的動手"]],
+["有話直說型","什麼都要你猜型",["不開心會直接說出原因，願意溝通","什麼都不說，等你自己猜，猜錯又生氣"]],
+["家事分擔型","什麼都不管型",["願意一起分擔家事，不會把所有事情都丟給你","偶爾幫忙，但大部分還是要你處理","認為家事都是你的事，完全不願意分擔"]],
+["支持夢想型","潑冷水型",["支持你的夢想和目標，也願意陪你一起努力","不太理解，但不會阻止你","總是潑你冷水，甚至打擊你的信心"]],
+["體貼照顧型","只顧自己型",["會留意你的喜好，也會主動關心你想吃什麼","通常各吃各的，偶爾才會想到你","只在乎自己想吃什麼，完全不管你的感受"]],
+["體諒工作型","只會抱怨型",["知道你工作辛苦，會體諒你晚回家，也願意好好溝通","會抱怨你回家太晚，但願意聽你解釋","不管你工作多忙，只要稍晚一點就奪命連環call甚至嚴重口角吵架"]],
+["理性溝通型","吵架失控型",["吵架時願意好好溝通，不摔東西、不翻舊帳，也不拿離婚威脅你","生氣時會翻舊帳或說氣話，但冷靜後願意溝通","經常摔東西、翻舊帳，甚至動不動就把離婚掛在嘴邊"]],
+["主動經營型","有孩子就忽略型",["有孩子後仍會安排夫妻相處時間，維持兩個人的感情","大部分時間都在忙孩子，偶爾才有夫妻約會","有了孩子後就不再重視夫妻相處，完全不願意安排兩人時間"]],
+["親密關係型","長期疏離型",["願意維持夫妻性關係，也會在意彼此的需求與感受","親密互動變少，但願意溝通和調整","長期拒絕親密接觸，也不願意討論原因，或甚至分房睡"]],
+["懂得界線型","異性界線不清型",["和異性相處有分寸，會主動顧及你的感受","有時候讓你不舒服，但願意溝通和調整","經常和異性過度親密，即使你介意也不在乎"]],
+["尊重隱私型","查勤控制型",["彼此信任，不會隨便翻手機，也尊重對方的隱私","偶爾會想確認，但願意溝通彼此的界線","經常查手機、查訊息，沒有看到想看的內容就懷疑你"]],
+["互相尊重型","只准她做型",["支持你有自己的興趣，也願意讓彼此保有個人時間","偶爾會不高興，但溝通後願意接受","不准你有自己的興趣或朋友，卻要求你配合她的一切"]],
+["共同理財型","花錢沒共識型",["願意一起討論家庭開銷，對重要支出有共識","偶爾對花錢方式有不同意見，但願意協調","完全不願意討論家庭支出，花錢方式也經常造成衝突"]],
+["願意溝通型","冷戰逃避型",["發生爭執時，願意好好溝通|即使當下有情緒，也願意聽你說、表達自己的想法，努力把問題講清楚。","需要冷靜一下，之後才願意談|當下不太會表達，會被情緒牽著走，但冷靜之後，通常還是願意溝通、一起解決問題。","習慣逃避問題，讓爭執一直沒有結果|經常不願意談、有時候裝沒事，刻意冷落對方或把問題擱著不處理。"]],
+["重視小家庭型","永遠原生家庭優先型",["結婚後懂得兼顧原生家庭與自己的小家庭，重大決定會先和你討論","有時候會優先考慮原生家庭，但願意聽你的想法","不管事情大小，都只考慮原生家庭，完全不顧你們夫妻的共識"]],
+["懂得拿捏分寸型","讓你夾在中間型",["遇到和她家人的摩擦，願意理性溝通，也會顧及你的立場","有時候會偏袒自己的家人，但事後願意溝通","不管誰對誰錯，都要求你退讓，甚至責怪你不配合她的家人"]],
+["給你面子型","當眾讓你難堪型",["在外人面前尊重你，有意見會私下好好說","偶爾會當眾抱怨你，但事後願意溝通","經常在別人面前嘲諷你、數落你，完全不顧你的感受"]],
+["共同面對型","遇事只會怪你型",["遇到生活或婚姻上的困難，願意和你一起想辦法、一起承擔","遇到問題會焦慮或抱怨，但冷靜後願意一起處理","遇到困難只會責怪你，把所有責任都推給你"]],
+["孝順體貼型","對公婆不聞不問型",["比你還要關心公婆的生活和健康，遇到需要幫忙的時候，也願意在能力範圍內一起照應","平常會基本關心公婆，但不太會主動過問或幫忙","完全不關心公婆，也不願意在合理範圍內提供協助"]]
+];
+var T=[[85,100,"寶藏老婆 💎","她願意體諒你、支持你，也願意和你一起面對生活的大小事。她不一定完美，但懂得珍惜彼此，也願意一起經營婚姻。"],
+[65,84,"值得珍惜型 ❤️","你們有不錯的感情基礎，只是有些相處習慣還需要磨合。多一點理解、少一點理所當然，感情才能越走越穩。"],
+[45,64,"默契培養型 💗","生活的忙碌可能讓你們漸漸忽略彼此。不是沒有愛，而是有些話還沒說開，有些感受還沒被理解。"],
+[25,44,"婚姻充電型 🔋","你們可能累積了不少不滿，也忘了怎麼好好相處。試著放下責怪，重新溝通彼此的需求，看看兩個人能不能一起做出改變。"],
+[0,24,"關係需要認真面對 🥺","你們的相處可能有些問題已經不能再忽略。婚姻不是一個人的責任，除了說出感受，也要看彼此是否都願意付出與改變。"]];
+var PTS=[5,3,0],LET="ABC";
+var ans=new Array(Q.length).fill(null),cur=-1,app=document.getElementById("app");
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function head(){var p=cur<0?0:Math.min(cur+1,Q.length)/Q.length*100;
+return '<div class="top"><span>老婆指數測驗</span><span>'+(cur>=0&&cur<Q.length?(cur+1)+' / '+Q.length:'')+'</span></div><div class="bar"><i style="width:'+p+'%"></i></div>'}
+function start(){cur=-1;ans.fill(null);
+app.innerHTML=head()+'<h1>你老婆到底<b>幾分</b>？</h1><p><b>20 題，滿分 100 分。</b></p><p>每題選一個最像她的，不用想太久，憑真實感受就好。選項旁邊的分數會自動幫你加總。</p><div class="nav"><span></span><button class="btn" id="go">開始作答</button></div><div class="src">題目出處：Instagram @nat_3ody</div>';
+document.getElementById("go").onclick=function(){cur=0;show()}}
+function show(){var q=Q[cur],o=q[2].map(function(t,i){var p=t.split("|"),pt=i==q[2].length-1&&q[2].length==2?0:PTS[i];
+return '<button class="opt'+(ans[cur]===i?' on':'')+'" data-i="'+i+'"><span class="l">'+LET[i]+'</span><span class="t">'+esc(p[0])+(p[1]?'<small>'+esc(p[1])+'</small>':'')+'</span><span class="s s'+pt+'">+'+pt+'分</span></button>'}).join("");
+app.innerHTML=head()+'<div class="qn">選一個最像她的</div><h2>'+q[0]+'<small>vs</small>'+q[1]+'</h2>'+o+'<div class="nav"><button class="btn ghost" id="bk">上一題</button><button class="btn" id="nx" '+(ans[cur]===null?'disabled':'')+'>'+(cur==Q.length-1?'看結果':'下一題')+'</button></div>';
+[].forEach.call(app.querySelectorAll(".opt"),function(b){b.onclick=function(){ans[cur]=+b.dataset.i;show();setTimeout(next,250)}});
+document.getElementById("bk").onclick=function(){if(cur==0)start();else{cur--;show()}};
+document.getElementById("nx").onclick=next}
+var lock=false;
+function next(){if(ans[cur]===null)return;if(cur<Q.length-1){cur++;show();window.scrollTo(0,0)}else result()}
+function score(){return ans.reduce(function(s,a,i){var n=Q[i][2].length;return s+(a===null?0:(n==2&&a==1?0:PTS[a]))},0)}
+function result(){cur=Q.length;var s=score(),me=T.filter(function(t){return s>=t[0]&&s<=t[1]})[0];
+app.innerHTML=head()+'<div class="qn">你的老婆指數</div><div class="big">'+s+'<small> / 100</small></div><div class="tier me"><h3>'+me[2]+'</h3><p>'+me[3]+'</p></div><h2 style="margin-top:28px;font-size:18px">所有結果</h2>'+
+T.map(function(t){return '<div class="tier'+(t===me?' me':'')+'"><h3><span>'+t[0]+'–'+t[1]+'分</span>'+t[2]+'</h3><p>'+t[3]+'</p></div>'}).join("")+
+'<p class="note"><b>分數只是參考，不是替婚姻判定好壞。</b>真正重要的不是老婆得幾分，而是兩個人願不願意理解彼此、尊重彼此，一起把日子過好。有些老婆沒有到以上的分數，也不代表就不好，很多時候是老公願意寵、願意疼老婆，讓相處慢慢變成如此。</p><div class="nav"><button class="btn ghost" id="bk">改上一題</button><button class="btn" id="rs">重新測驗</button></div>';
+document.getElementById("bk").onclick=function(){cur=Q.length-1;show()};document.getElementById("rs").onclick=start;window.scrollTo(0,0)}
+start();
+</script>
+</body>
+</html>
